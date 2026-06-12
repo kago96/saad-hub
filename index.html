@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sa'ad Hub</title>
+<style>
+:root {
+  --bg: #0a0a0a; --surface: #141414; --surface2: #1c1c1c;
+  --border: #262626; --text: #e5e5e5; --text2: #888; --text3: #555;
+  --blue: #3b82f6; --blue-dim: #1e3a5f; --green: #22c55e; --green-dim: #14532d;
+  --purple: #a855f7; --purple-dim: #3b1f3b; --red: #ef4444; --orange: #f59e0b;
+  --radius: 12px; --nav-h: 64px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; min-height: 100dvh;
+  padding-bottom: calc(var(--nav-h) + 16px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header */
+.hdr {
+  padding: 16px 20px 12px; display: flex; justify-content: space-between; align-items: center;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 20;
+}
+.hdr h1 { font-size: 20px; font-weight: 700; }
+.hdr-badge { font-size: 11px; padding: 3px 8px; border-radius: 20px; background: var(--green-dim); color: var(--green); font-weight: 600; }
+
+/* Bottom Nav */
+.bnav {
+  position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h);
+  background: var(--surface); border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  z-index: 20; padding-bottom: env(safe-area-inset-bottom);
+}
+.bnav button {
+  background: none; border: none; color: var(--text3); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; font-size: 10px; font-weight: 500; transition: color .15s;
+}
+.bnav button .ico { font-size: 22px; }
+.bnav button.on { color: var(--blue); }
+
+/* Pages */
+.pg { display: none; padding: 16px 16px 0; animation: fade .2s; }
+.pg.on { display: block; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Cards */
+.cd {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; margin-bottom: 12px;
+}
+.cd h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+.cd p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* Stats Grid */
+.sg { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+.sc {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px; text-align: center;
+}
+.sc .n { font-size: 26px; font-weight: 800; color: var(--blue); }
+.sc .l { font-size: 11px; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
+
+/* Tags */
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 600;
+}
+.tag-ekonomi { background: var(--blue-dim); color: var(--blue); }
+.tag-bisnis { background: var(--purple-dim); color: var(--purple); }
+.tag-teknologi { background: var(--green-dim); color: var(--green); }
+.tag-on { background: var(--green-dim); color: var(--green); }
+.tag-off { background: #3a1a1a; color: var(--red); }
+.tag-pending { background: #3a2f1a; color: var(--orange); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 18px; border-radius: 10px; border: none;
+  font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn-bl { background: var(--blue); color: #fff; }
+.btn-bl:hover { background: #2563eb; }
+.btn-out { background: none; border: 1px solid var(--border); color: var(--text2); }
+.btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+.btn-red { background: #7f1d1d; color: var(--red); border: none; }
+
+/* Form */
+.fg { margin-bottom: 12px; }
+.fg label { display: block; font-size: 11px; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .3px; }
+.fg input, .fg textarea, .fg select {
+  width: 100%; padding: 10px 12px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+  font-size: 14px; outline: none; transition: border .15s;
+}
+.fg input:focus, .fg textarea:focus { border-color: var(--blue); }
+.fg textarea { min-height: 80px; resize: vertical; }
+
+/* List */
+.li {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.li:last-child { border-bottom: none; }
+.li .nm { font-size: 14px; color: var(--text); }
+.li .sb { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+/* Modal */
+.mo {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75);
+  z-index: 100; align-items: flex-end; justify-content: center;
+}
+.mo.show { display: flex; }
+.mo-box {
+  background: var(--surface); border-radius: 20px 20px 0 0;
+  padding: 24px 20px 32px; width: 100%; max-height: 85vh; overflow-y: auto;
+}
+.mo-box h2 { font-size: 18px; margin-bottom: 16px; }
+.mo-row { display: flex; gap: 8px; margin-top: 16px; }
+.mo-row .btn { flex: 1; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%; transform: translateX(-50%);
+  background: var(--surface2); color: var(--text); padding: 10px 20px;
+  border-radius: 10px; font-size: 13px; border: 1px solid var(--border);
+  display: none; z-index: 200; white-space: nowrap;
+}
+.toast.show { display: block; animation: fade .2s; }
+
+/* Output box */
+.out-box {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px; margin-top: 8px; font-size: 13px; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word; color: var(--text);
+}
+
+/* Schedule card */
+.sched-card {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; margin-bottom: 8px;
+}
+.sched-card .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.sched-card .txt { font-size: 13px; line-height: 1.5; color: var(--text); }
+.sched-card .meta { font-size: 11px; color: var(--text3); }
+
+/* Reply log */
+.reply-card {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; margin-bottom: 8px;
+}
+.reply-card .top { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.reply-card .comment { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.reply-card .response { font-size: 13px; color: var(--green); }
+
+/* Bar chart */
+.bar-wrap { margin-bottom: 8px; }
+.bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 3px; }
+.bar-track { height: 6px; background: var(--border); border-radius: 3px; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width .3s; }
+.bar-fill.ekonomi { background: var(--blue); }
+.bar-fill.bisnis { background: var(--purple); }
+.bar-fill.teknologi { background: var(--green); }
+
+/* Toggle switch */
+.toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle .slider {
+  position: absolute; inset: 0; background: var(--border); border-radius: 24px; cursor: pointer; transition: .2s;
+}
+.toggle .slider:before {
+  content: ''; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px;
+  background: var(--text3); border-radius: 50%; transition: .2s;
+}
+.toggle input:checked + .slider { background: var(--blue-dim); }
+.toggle input:checked + .slider:before { transform: translateX(20px); background: var(--blue); }
+
+/* Empty state */
+.empty { text-align: center; padding: 32px 16px; color: var(--text3); font-size: 13px; }
+
+/* Skeleton pulse */
+.pulse { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>Sa'ad Hub</h1>
+  <span class="hdr-badge" id="hdrBadge">● Online</span>
+</div>
+
+<!-- PAGE: Home -->
+<div class="pg on" id="pg-home">
+  <div class="sg">
+    <div class="sc"><div class="n" id="sProd">-</div><div class="l">Produk</div></div>
+    <div class="sc"><div class="n" id="sPost">-</div><div class="l">Post Hari Ini</div></div>
+    <div class="sc"><div class="n" id="sTok">-</div><div class="l">Total Token</div></div>
+    <div class="sc"><div class="n" id="sRun">-</div><div class="l">Total Run</div></div>
+  </div>
+
+  <div class="cd">
+    <h3>⚡ Output Terakhir</h3>
+    <div id="homeLast" class="out-box pulse" style="min-height:40px;">Memuat...</div>
+  </div>
+
+  <div class="cd">
+    <h3>📊 Distribusi Kategori</h3>
+    <div id="homeCat"></div>
+  </div>
+
+  <div class="cd">
+    <h3>🕐 Log Terbaru</h3>
+    <div id="homeLogs"></div>
+  </div>
+</div>
+
+<!-- PAGE: Content -->
+<div class="pg" id="pg-content">
+  <div class="cd">
+    <h3>⚡ Generate Konten</h3>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <select id="genCat" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;">
+        <option value="">Random</option>
+        <option value="ekonomi">Ekonomi</option>
+        <option value="bisnis">Bisnis</option>
+        <option value="teknologi">Teknologi</option>
+      </select>
+      <button class="btn btn-bl" onclick="triggerPipeline()" id="triggerBtn">⚡ Generate</button>
+    </div>
+    <div id="triggerMsg" style="font-size:12px;color:var(--text3);"></div>
+  </div>
+
+  <div class="cd">
+    <h3>📝 Riwayat Konten</h3>
+    <div style="margin-bottom:10px;">
+      <select id="logFilter" onchange="loadContentLogs()" style="width:100%;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+        <option value="">Semua Kategori</option>
+        <option value="ekonomi">Ekonomi</option>
+        <option value="bisnis">Bisnis</option>
+        <option value="teknologi">Teknologi</option>
+      </select>
+    </div>
+    <div id="contentLogs"></div>
+  </div>
+</div>
+
+<!-- PAGE: Social -->
+<div class="pg" id="pg-social">
+  <div class="cd">
+    <h3>📱 Threads — @<span id="thUser">...</span></h3>
+    <div id="thStatus" style="font-size:13px;color:var(--text3);">Memuat...</div>
+  </div>
+
+  <div class="cd">
+    <h3>✍️ Post ke Threads</h3>
+    <div class="fg" style="margin-top:8px;">
+      <textarea id="postText" placeholder="Tulis konten di sini..." style="min-height:100px;"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-bl" onclick="postNow()" id="postBtn">📤 Post Sekarang</button>
+      <button class="btn btn-out" onclick="loadLastContent()">📋 Ambil dari Pipeline</button>
+      <button class="btn btn-out" onclick="openScheduleModal()">🕐 Schedule</button>
+    </div>
+    <div id="postMsg" style="margin-top:8px;font-size:12px;"></div>
+  </div>
+
+  <div class="cd">
+    <h3>🕐 Scheduled Posts</h3>
+    <div id="schedList"></div>
+  </div>
+
+  <div class="cd">
+    <h3>🤖 Auto-Reply</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div>
+        <div style="font-size:13px;color:var(--text);">Auto-reply aktif</div>
+        <div style="font-size:11px;color:var(--text3);">Polling tiap jam, model gpt-4.1-mini</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="autoReplyToggle" checked onchange="toggleAutoReply()">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div id="replyStatus" style="font-size:12px;color:var(--text3);">Memuat status...</div>
+    <div id="replyLogs" style="margin-top:10px;"></div>
+  </div>
+
+  <div class="cd">
+    <h3>📋 Riwayat Post</h3>
+    <div id="socialHistory"></div>
+  </div>
+</div>
+
+<!-- PAGE: Settings -->
+<div class="pg" id="pg-settings">
+  <div class="cd">
+    <h3>👤 Persona Aktif</h3>
+    <div id="setPersona">Memuat...</div>
+    <button class="btn btn-out btn-sm" style="margin-top:8px;" onclick="openPersonaModal()">✏️ Edit Prompt</button>
+  </div>
+
+  <div class="cd">
+    <h3>📦 Produk</h3>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <select id="prodFilter" onchange="loadProducts()" style="flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+        <option value="">Semua</option>
+        <option value="ekonomi">Ekonomi</option>
+        <option value="bisnis">Bisnis</option>
+        <option value="teknologi">Teknologi</option>
+      </select>
+      <button class="btn btn-bl btn-sm" onclick="openProductModal()">+ Baru</button>
+    </div>
+    <div id="prodList"></div>
+  </div>
+
+  <div class="cd">
+    <h3>⚙️ Sistem</h3>
+    <div class="li"><div><div class="nm">Server</div><div class="sb" id="sysServer">-</div></div></div>
+    <div class="li"><div><div class="nm">Pipeline Model</div><div class="sb">gpt-4.1-mini</div></div></div>
+    <div class="li"><div><div class="nm">Pipeline Cron</div><div class="sb">0 6,12,18,0 UTC (4x/hari)</div></div></div>
+    <div class="li"><div><div class="nm">Schedule Poster</div><div class="sb">*/15 menit</div></div></div>
+    <div class="li"><div><div class="nm">Auto-Reply</div><div class="sb">0 * * * * (tiap jam)</div></div></div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bnav">
+  <button class="on" data-pg="home"><span class="ico">🏠</span>Home</button>
+  <button data-pg="content"><span class="ico">⚡</span>Konten</button>
+  <button data-pg="social"><span class="ico">📱</span>Social</button>
+  <button data-pg="settings"><span class="ico">⚙️</span>Setelan</button>
+</div>
+
+<!-- Modal: Schedule -->
+<div class="mo" id="moSched">
+  <div class="mo-box">
+    <h2>🕐 Schedule Post</h2>
+    <div class="fg">
+      <label>Waktu Post</label>
+      <input type="datetime-local" id="schedTime">
+    </div>
+    <div class="mo-row">
+      <button class="btn btn-out" onclick="closeMo('moSched')">Batal</button>
+      <button class="btn btn-bl" onclick="schedulePost()">Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Product -->
+<div class="mo" id="moProd">
+  <div class="mo-box">
+    <h2 id="moProdTitle">Tambah Produk</h2>
+    <input type="hidden" id="prodId">
+    <div class="fg"><label>Nama Produk *</label><input id="pNama" placeholder="Sepatu Olahraga"></div>
+    <div class="fg"><label>Link Shopee</label><input id="pLink" placeholder="https://s.shopee.co.id/..."></div>
+    <div class="fg"><label>Kategori</label>
+      <select id="pKat"><option value="ekonomi">Ekonomi</option><option value="bisnis">Bisnis</option><option value="teknologi">Teknologi</option></select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="fg"><label>Harga Normal</label><input id="pHrgN" type="number" placeholder="100000"></div>
+      <div class="fg"><label>Harga Diskon</label><input id="pHrgD" type="number" placeholder="80000"></div>
+    </div>
+    <div class="fg"><label>Status</label>
+      <select id="pStat"><option value="aktif">Aktif</option><option value="nonaktif">Nonaktif</option><option value="sold_out">Sold Out</option></select>
+    </div>
+    <div class="fg"><label>Keyword (koma)</label><input id="pKw" placeholder="sepatu, olahraga"></div>
+    <div class="fg"><label>Contoh Konten</label><textarea id="pContoh" placeholder="Thread yang perform..."></textarea></div>
+    <div class="mo-row">
+      <button class="btn btn-out" onclick="closeMo('moProd')">Batal</button>
+      <button class="btn btn-bl" onclick="saveProduct()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Persona -->
+<div class="mo" id="moPersona">
+  <div class="mo-box">
+    <h2 id="moPersTitle">Edit Persona</h2>
+    <input type="hidden" id="persId">
+    <div class="fg"><label>Nama</label><input id="psNama" placeholder="Sa'ad"></div>
+    <div class="fg"><label>System Prompt (W_SYSTEM)</label><textarea id="psPrompt" style="min-height:180px;" placeholder="Lo Sa'ad. 28 tahun..."></textarea></div>
+    <div class="fg"><label>Contoh Output</label><textarea id="psContoh" style="min-height:60px;"></textarea></div>
+    <div class="mo-row">
+      <button class="btn btn-out" onclick="closeMo('moPersona')">Batal</button>
+      <button class="btn btn-bl" onclick="savePersona()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api';
+
+// === NAV ===
+document.querySelectorAll('.bnav button').forEach(b => {
+  b.addEventListener('click', () => go(b.dataset.pg));
+});
+
+function go(name) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.bnav button').forEach(b => b.classList.remove('on'));
+  document.getElementById('pg-' + name).classList.add('on');
+  document.querySelector(`.bnav button[data-pg="${name}"]`).classList.add('on');
+  if (name === 'home') loadHome();
+  if (name === 'content') loadContentLogs();
+  if (name === 'social') loadSocial();
+  if (name === 'settings') loadSettings();
+}
+
+// === TOAST ===
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// === MODAL ===
+function openMo(id) { document.getElementById(id).classList.add('show'); }
+function closeMo(id) { document.getElementById(id).classList.remove('show'); }
+
+// === HOME ===
+async function loadHome() {
+  try {
+    const [stats, logs, products] = await Promise.all([
+      fetch(API + '/pipeline/stats').then(r => r.json()),
+      fetch(API + '/logs?limit=5').then(r => r.json()),
+      fetch(API + '/products').then(r => r.json()),
+    ]);
+
+    document.getElementById('sProd').textContent = products.length;
+    document.getElementById('sPost').textContent = stats.today_runs;
+    document.getElementById('sTok').textContent = (stats.total_tokens || 0).toLocaleString();
+    document.getElementById('sRun').textContent = stats.total_runs;
+
+    // Last output
+    const last = stats.last_run;
+    const lastDiv = document.getElementById('homeLast');
+    lastDiv.classList.remove('pulse');
+    if (last && last.output) {
+      const cat = (last.kategori || '').toLowerCase();
+      lastDiv.innerHTML = `<div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
+        <span class="tag tag-${cat}">${last.kategori || '?'}</span>
+        <span style="font-size:11px;color:var(--text3);">${last.created_at || ''} • ${last.token_used || 0} tok</span>
+      </div>${esc(last.output)}`;
+    } else {
+      lastDiv.textContent = 'Belum ada output';
+    }
+
+    // Category bars
+    const cats = stats.by_category || {};
+    const total = Object.values(cats).reduce((a, b) => a + b, 0);
+    const catDiv = document.getElementById('homeCat');
+    // Filter out non-category entries
+    const catEntries = Object.entries(cats).filter(([k]) => ['ekonomi', 'bisnis', 'teknologi'].includes(k));
+    if (catEntries.length === 0 || total === 0) {
+      catDiv.innerHTML = '<div class="empty">Belum ada data</div>';
+    } else {
+      catDiv.innerHTML = catEntries.map(([k, v]) => {
+        const pct = Math.round(v / total * 100);
+        return `<div class="bar-wrap">
+          <div class="bar-label"><span>${k}</span><span>${v} (${pct}%)</span></div>
+          <div class="bar-track"><div class="bar-fill ${k}" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+    }
+
+    // Recent logs
+    const logsDiv = document.getElementById('homeLogs');
+    if (logs.length === 0) {
+      logsDiv.innerHTML = '<div class="empty">Belum ada log</div>';
+    } else {
+      logsDiv.innerHTML = logs.map(l => {
+        const cat = (l.kategori || '?').toLowerCase();
+        return `<div class="li">
+          <div>
+            <div class="nm"><span class="tag tag-${cat}" style="margin-right:6px;">${l.kategori||'?'}</span>${esc((l.output||'').slice(0,60))}${(l.output||'').length > 60 ? '...' : ''}</div>
+            <div class="sb">${l.created_at || ''}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    document.getElementById('hdrBadge').textContent = '● Online';
+  } catch(e) {
+    document.getElementById('hdrBadge').textContent = '● Offline';
+    document.getElementById('hdrBadge').style.background = '#3a1a1a';
+    document.getElementById('hdrBadge').style.color = 'var(--red)';
+  }
+}
+
+// === CONTENT ===
+async function triggerPipeline() {
+  const btn = document.getElementById('triggerBtn');
+  const msg = document.getElementById('triggerMsg');
+  btn.disabled = true; btn.textContent = '⏳ Generating...';
+  msg.textContent = 'Pipeline dijalankan, tunggu 30 detik...';
+  try {
+    await fetch(API + '/pipeline/trigger', { method: 'POST' });
+    setTimeout(async () => {
+      msg.innerHTML = '<span style="color:var(--green);">✅ Selesai!</span>';
+      btn.disabled = false; btn.textContent = '⚡ Generate';
+      loadContentLogs();
+    }, 30000);
+  } catch(e) {
+    msg.innerHTML = '<span style="color:var(--red);">❌ Gagal: ' + e + '</span>';
+    btn.disabled = false; btn.textContent = '⚡ Generate';
+  }
+}
+
+async function loadContentLogs() {
+  const filter = document.getElementById('logFilter').value;
+  try {
+    let url = API + '/pipeline/logs?limit=30';
+    if (filter) url += '&kategori=' + filter;
+    const data = await fetch(url).then(r => r.json());
+    const div = document.getElementById('contentLogs');
+    if (data.length === 0) {
+      div.innerHTML = '<div class="empty">Belum ada konten</div>';
+      return;
+    }
+    div.innerHTML = data.map(l => {
+      const cat = (l.kategori || '?').toLowerCase();
+      const out = esc(l.output || '');
+      return `<div class="cd" style="padding:12px;">
+        <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
+          <span class="tag tag-${cat}">${l.kategori||'?'}</span>
+          <span style="font-size:11px;color:var(--text3);">${l.created_at||''}</span>
+          <span style="font-size:11px;color:var(--text3);">${l.token_used||0} tok</span>
+        </div>
+        <div style="font-size:13px;line-height:1.6;white-space:pre-wrap;">${out}</div>
+        ${l.trending_kw ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;">Trend: ${l.trending_kw}</div>` : ''}
+        <div style="margin-top:8px;display:flex;gap:6px;">
+          <button class="btn btn-out btn-sm" onclick="useContent(this)" data-text="${attr(l.output||'')}">📱 Post ke Threads</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('contentLogs').innerHTML = '<div class="empty" style="color:var(--red);">Gagal memuat</div>';
+  }
+}
+
+function useContent(btn) {
+  document.getElementById('postText').value = btn.dataset.text;
+  go('social');
+  toast('Konten dimuat, tinggal post!');
+}
+
+// === SOCIAL ===
+async function loadSocial() {
+  // Profile
+  try {
+    const profile = await fetch(API + '/threads/profile').then(r => r.json());
+    document.getElementById('thUser').textContent = profile.username || '?';
+    document.getElementById('thStatus').innerHTML = '<span style="color:var(--green);">✅ Terhubung</span>';
+  } catch(e) {
+    document.getElementById('thStatus').innerHTML = '<span style="color:var(--red);">❌ Gagal koneksi</span>';
+  }
+
+  // Scheduled posts
+  try {
+    const sched = await fetch(API + '/schedule').then(r => r.json());
+    const div = document.getElementById('schedList');
+    if (sched.length === 0) {
+      div.innerHTML = '<div class="empty">Belum ada scheduled post</div>';
+    } else {
+      div.innerHTML = sched.map(s => {
+        const stColor = s.status === 'posted' ? 'tag-on' : s.status === 'failed' ? 'tag-off' : 'tag-pending';
+        return `<div class="sched-card">
+          <div class="top">
+            <span class="tag ${stColor}">${s.status}</span>
+            <span class="meta">${s.post_at || ''}</span>
+          </div>
+          <div class="txt">${esc((s.content||'').slice(0,120))}${(s.content||'').length > 120 ? '...' : ''}</div>
+          ${s.status === 'pending' ? `<button class="btn btn-red btn-sm" style="margin-top:6px;" onclick="deleteSched(${s.id})">Hapus</button>` : ''}
+        </div>`;
+      }).join('');
+    }
+  } catch(e) {}
+
+  // Auto-reply status — check replied_comments table
+  try {
+    const logs = await fetch(API + '/logs?limit=20').then(r => r.json());
+    const replies = logs.filter(l => l.kategori === 'auto_reply');
+    const rDiv = document.getElementById('replyLogs');
+    if (replies.length === 0) {
+      document.getElementById('replyStatus').textContent = 'Belum ada reply terkirim';
+      rDiv.innerHTML = '';
+    } else {
+      document.getElementById('replyStatus').innerHTML = `<span style="color:var(--green);">${replies.length} reply terkirim</span>`;
+      rDiv.innerHTML = replies.slice(0, 5).map(r => {
+        return `<div class="reply-card">
+          <div class="top">
+            <span style="font-size:11px;color:var(--text3);">${r.created_at || ''}</span>
+          </div>
+          <div class="response">${esc((r.output||'').slice(0,150))}</div>
+        </div>`;
+      }).join('');
+    }
+  } catch(e) {}
+
+  // Post history
+  try {
+    const logs = await fetch(API + '/logs?limit=20').then(r => r.json());
+    const posts = logs.filter(l => ['threads_post', 'scheduled_post'].includes(l.kategori));
+    const div = document.getElementById('socialHistory');
+    if (posts.length === 0) {
+      div.innerHTML = '<div class="empty">Belum ada post ke Threads</div>';
+    } else {
+      div.innerHTML = posts.map(p => {
+        return `<div class="li">
+          <div>
+            <div class="nm">${esc((p.output||'').slice(0,100))}${(p.output||'').length > 100 ? '...' : ''}</div>
+            <div class="sb">${p.kategori === 'scheduled_post' ? '🕐 ' : ''}${p.created_at || ''}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  } catch(e) {}
+}
+
+async function postNow() {
+  const text = document.getElementById('postText').value.trim();
+  if (!text) { toast('Tulis konten dulu'); return; }
+  const btn = document.getElementById('postBtn');
+  const msg = document.getElementById('postMsg');
+  btn.disabled = true; btn.textContent = '⏳ Posting...';
+  try {
+    const r = await fetch(API + '/threads/post', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text}),
+    });
+    const data = await r.json();
+    if (r.ok) {
+      msg.innerHTML = '<span style="color:var(--green);">✅ Posted! ID: ' + data.post_id + '</span>';
+      document.getElementById('postText').value = '';
+      loadSocial();
+    } else {
+      msg.innerHTML = '<span style="color:var(--red);">❌ ' + (data.detail || 'Gagal') + '</span>';
+    }
+  } catch(e) {
+    msg.innerHTML = '<span style="color:var(--red);">❌ ' + e + '</span>';
+  }
+  btn.disabled = false; btn.textContent = '📤 Post Sekarang';
+}
+
+async function loadLastContent() {
+  try {
+    const r = await fetch(API + '/pipeline/stats').then(r => r.json());
+    if (r.last_run && r.last_run.output) {
+      document.getElementById('postText').value = r.last_run.output;
+      toast('Konten terakhir dimuat');
+    } else {
+      toast('Belum ada output pipeline');
+    }
+  } catch(e) { toast('Gagal ambil'); }
+}
+
+function openScheduleModal() {
+  const text = document.getElementById('postText').value.trim();
+  if (!text) { toast('Tulis konten dulu'); return; }
+  // Set default time to 1 hour from now
+  const now = new Date();
+  now.setHours(now.getHours() + 1);
+  document.getElementById('schedTime').value = now.toISOString().slice(0, 16);
+  openMo('moSched');
+}
+
+async function schedulePost() {
+  const text = document.getElementById('postText').value.trim();
+  const time = document.getElementById('schedTime').value;
+  if (!text || !time) { toast('Konten & waktu wajib diisi'); return; }
+  try {
+    await fetch(API + '/schedule', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ content: text, post_at: new Date(time).toISOString() }),
+    });
+    toast('Scheduled!');
+    closeMo('moSched');
+    loadSocial();
+  } catch(e) { toast('Gagal schedule'); }
+}
+
+async function deleteSched(id) {
+  try {
+    await fetch(API + '/schedule/' + id, { method: 'DELETE' });
+    toast('Dihapus');
+    loadSocial();
+  } catch(e) { toast('Gagal hapus'); }
+}
+
+function toggleAutoReply() {
+  const on = document.getElementById('autoReplyToggle').checked;
+  toast(on ? 'Auto-reply AKTIF' : 'Auto-reply OFF — cron masih jalan');
+}
+
+// === SETTINGS ===
+async function loadSettings() {
+  // Persona
+  try {
+    const personas = await fetch(API + '/personas').then(r => r.json());
+    const active = personas.find(p => p.is_active);
+    const div = document.getElementById('setPersona');
+    if (active) {
+      div.innerHTML = `<div style="font-size:15px;font-weight:600;margin-bottom:4px;">${active.nama} <span class="tag tag-on">v${active.version}</span></div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px;white-space:pre-wrap;max-height:100px;overflow:hidden;">${esc((active.system_prompt||'').slice(0,300))}...</div>`;
+      document.getElementById('persId').value = active.id;
+      document.getElementById('psNama').value = active.nama;
+      document.getElementById('psPrompt').value = active.system_prompt || '';
+      document.getElementById('psContoh').value = active.contoh_output || '';
+    } else {
+      div.innerHTML = '<div class="empty">Belum ada persona aktif</div>';
+    }
+  } catch(e) {}
+
+  // Products
+  loadProducts();
+
+  // Server
+  document.getElementById('sysServer').textContent = '● Running (port 8080)';
+  document.getElementById('sysServer').style.color = 'var(--green)';
+}
+
+async function loadProducts() {
+  const cat = document.getElementById('prodFilter').value;
+  let url = API + '/products?';
+  if (cat) url += 'kategori=' + cat + '&';
+  try {
+    const data = await fetch(url).then(r => r.json());
+    const div = document.getElementById('prodList');
+    if (data.length === 0) {
+      div.innerHTML = '<div class="empty">Belum ada produk</div>';
+      return;
+    }
+    div.innerHTML = data.map(p => {
+      const stTag = p.status === 'aktif' ? 'tag-on' : 'tag-off';
+      const catTag = (p.kategori || 'ekonomi').toLowerCase();
+      const diskon = p.harga_diskon && p.harga_normal ? Math.round((1 - p.harga_diskon / p.harga_normal) * 100) + '%' : '';
+      return `<div class="li">
+        <div>
+          <div class="nm">${p.nama} <span class="tag tag-${catTag}">${p.kategori}</span> <span class="tag ${stTag}">${p.status}</span></div>
+          <div class="sb">${p.keyword || ''} ${diskon ? '• -' + diskon : ''}</div>
+        </div>
+        <button class="btn btn-out btn-sm" onclick="editProduct(${p.id})">Edit</button>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('prodList').innerHTML = '<div class="empty" style="color:var(--red);">Gagal memuat</div>';
+  }
+}
+
+// Product CRUD
+function openProductModal() {
+  document.getElementById('moProdTitle').textContent = 'Tambah Produk';
+  document.getElementById('prodId').value = '';
+  ['pNama','pLink','pKw','pContoh','pHrgN','pHrgD'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pKat').value = 'ekonomi';
+  document.getElementById('pStat').value = 'aktif';
+  openMo('moProd');
+}
+
+async function editProduct(id) {
+  try {
+    const p = await fetch(API + '/products/' + id).then(r => r.json());
+    document.getElementById('moProdTitle').textContent = 'Edit Produk';
+    document.getElementById('prodId').value = p.id;
+    document.getElementById('pNama').value = p.nama || '';
+    document.getElementById('pLink').value = p.link_shopee || '';
+    document.getElementById('pKat').value = p.kategori || 'ekonomi';
+    document.getElementById('pHrgN').value = p.harga_normal || '';
+    document.getElementById('pHrgD').value = p.harga_diskon || '';
+    document.getElementById('pStat').value = p.status || 'aktif';
+    document.getElementById('pKw').value = p.keyword || '';
+    document.getElementById('pContoh').value = p.contoh_konten || '';
+    openMo('moProd');
+  } catch(e) { toast('Gagal load produk'); }
+}
+
+async function saveProduct() {
+  const data = {
+    nama: document.getElementById('pNama').value,
+    link_shopee: document.getElementById('pLink').value,
+    kategori: document.getElementById('pKat').value,
+    harga_normal: parseFloat(document.getElementById('pHrgN').value) || null,
+    harga_diskon: parseFloat(document.getElementById('pHrgD').value) || null,
+    status: document.getElementById('pStat').value,
+    keyword: document.getElementById('pKw').value,
+    contoh_konten: document.getElementById('pContoh').value,
+  };
+  if (!data.nama) { toast('Nama wajib diisi'); return; }
+  const id = document.getElementById('prodId').value;
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? API + '/products/' + id : API + '/products';
+  try {
+    await fetch(url, { method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+    toast(id ? 'Diupdate!' : 'Ditambahkan!');
+    closeMo('moProd');
+    loadProducts();
+  } catch(e) { toast('Gagal simpan'); }
+}
+
+// Persona
+function openPersonaModal() { openMo('moPersona'); }
+
+async function savePersona() {
+  const data = {
+    nama: document.getElementById('psNama').value,
+    system_prompt: document.getElementById('psPrompt').value,
+    contoh_output: document.getElementById('psContoh').value,
+    is_active: true,
+  };
+  if (!data.nama || !data.system_prompt) { toast('Nama & prompt wajib'); return; }
+  const id = document.getElementById('persId').value;
+  try {
+    if (id) {
+      await fetch(API + '/personas/' + id, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+    }
+    toast('Persona diupdate!');
+    closeMo('moPersona');
+    loadSettings();
+  } catch(e) { toast('Gagal simpan'); }
+}
+
+// === UTILS ===
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function attr(s) { return esc(s).replace(/"/g, '&quot;').replace(/\n/g, '&#10;'); }
+
+// Init
+loadHome();
+</script>
+</body>
+</html>
