@@ -381,57 +381,199 @@ body {
   </div>
 </div>
 
-<!-- Modal: Persona Editor -->
+<!-- Modal: Persona Editor Komplit -->
 <div class="mo" id="moPersona">
-  <div class="mo-box" style="max-width:600px;max-height:85vh;overflow-y:auto;">
-    <h2>✏️ Persona Editor</h2>
+  <div class="mo-box" style="max-width:640px;max-height:90vh;overflow-y:auto;">
+    <h2>✏️ Persona Designer</h2>
     <input type="hidden" id="persId">
     <div class="fg"><label>Nama Persona *</label><input id="psNama" placeholder="Sa'ad"></div>
     
-    <div style="border-left:3px solid var(--blue);padding-left:12px;margin:12px 0;">
-      <h4 style="font-size:13px;color:var(--blue);margin-bottom:6px;">🧍 Identitas</h4>
-      <div class="fg"><label>Siapa dia? Nama, umur, lokasi, status</label>
-        <textarea id="psIdentitas" style="min-height:50px;" placeholder="Lo Sa'ad. 28 tahun. Kontrak di Jakpus, kerja serabutan."></textarea></div>
-    </div>
+    <div style="margin-top:10px;">
 
-    <div style="border-left:3px solid var(--purple);padding-left:12px;margin:12px 0;">
-      <h4 style="font-size:13px;color:var(--purple);margin-bottom:6px;">💬 Gaya Bicara</h4>
-      <div class="fg"><label>Cara dia nulis — nada, tone, gaya khas</label>
-        <textarea id="psGaya" style="min-height:60px;" placeholder="Lo nulis kayak orang yang lagi ngetik di HP sambil rebahan habis capek kerja..."></textarea></div>
-    </div>
+      <div class="persec" style="border-left:3px solid var(--blue);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--blue);margin:0;">🧍 IDENTITAS DASAR</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Nama*</label><input id="psNama2" type="text" placeholder="Sa'ad"></div>
+          <div class="fg"><label>Umur</label><input id="psUmur" type="number" placeholder="28"></div>
+          <div class="fg"><label>Jenis Kelamin</label><input id="psJK" type="text" placeholder="Laki-laki"></div>
+          <div class="fg"><label>Lokasi Kota</label><input id="psLokasi" type="text" placeholder="Jakpus"></div>
+          <div class="fg"><label>Lokasi Detail</label><input id="psLokasiDetail" type="text" placeholder="Kontrakan Petamburan"></div>
+          <div class="fg"><label>Status</label><input id="psStatus" type="text" placeholder="Lajang"></div>
+          <div class="fg"><label>Pekerjaan Utama</label><input id="psKerja" type="text" placeholder="Kontrak, serabutan"></div>
+          <div class="fg"><label>Pekerjaan Sampingan</label><input id="psKerjaSamping" type="text" placeholder=""></div>
+          <div class="fg"><label>Penghasilan Range</label><input id="psGaji" type="text" placeholder="3-5jt/bulan"></div>
+          <div class="fg"><label>Pendidikan Terakhir</label><input id="psDidik" type="text" placeholder="SMA"></div>
+        </div>
+      </div>
 
-    <div style="border-left:3px solid var(--orange);padding-left:12px;margin:12px 0;">
-      <h4 style="font-size:13px;color:var(--orange);margin-bottom:4px;">📝 Contoh Nyata (4 contoh)</h4>
-      <div class="fg"><label>Contoh 1</label><textarea id="psC1" style="min-height:60px;" placeholder='"parah sih sebenernya. udah kerja 2 tahun..."'></textarea></div>
-      <div class="fg"><label>Contoh 2</label><textarea id="psC2" style="min-height:60px;" placeholder='"temen gue resign kemarin..."'></textarea></div>
-      <div class="fg"><label>Contoh 3</label><textarea id="psC3" style="min-height:60px;" placeholder='"harga beras naik lagi..."'></textarea></div>
-      <div class="fg"><label>Contoh 4</label><textarea id="psC4" style="min-height:60px;" placeholder='"udah ngitung-ngitung KPR..."'></textarea></div>
-    </div>
+      <div class="persec" style="border-left:3px solid var(--purple);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--purple);margin:0;">📖 LATAR BELAKANG</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Cerita Singkat</label><textarea id="psCerita" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Pengalaman Pahit</label><textarea id="psPahit" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Pengalaman Lucu</label><textarea id="psLucu" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Mimpi Belum Kesampaian</label><textarea id="psMimpi" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Kebiasaan Harian</label><textarea id="psKebiasaan" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Hobi</label><input id="psHobi" type="text" placeholder=""></div>
+          <div class="fg"><label>Tontonan Favorit</label><input id="psTontonan" type="text" placeholder=""></div>
+          <div class="fg"><label>Makanan Favorit</label><input id="psMakanan" type="text" placeholder=""></div>
+        </div>
+      </div>
 
-    <div style="border-left:3px solid var(--green);padding-left:12px;margin:12px 0;">
-      <h4 style="font-size:13px;color:var(--green);margin-bottom:6px;">📋 Aturan Utama</h4>
-      <div class="fg"><label>Cara kerja — step by step gimana dia nulis</label>
-        <textarea id="psAturan" style="min-height:100px;" placeholder="1. Ambil SATU fakta...&#10;2. Hubungkan ke momen...&#10;..."></textarea></div>
-    </div>
+      <div class="persec" style="border-left:3px solid var(--green);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--green);margin:0;">🧠 KEPRIBADIAN</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Sifat Utama (3-5 kata)</label><input id="psSifat" type="text" placeholder="Sinis, cuek, humor receh"></div>
+          <div class="fg"><label>Cara Hadapi Masalah</label><textarea id="psHadapi" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Reaksi Saat Senang</label><textarea id="psSenang" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Reaksi Saat Kesal</label><textarea id="psKesal" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Reaksi Saat Bingung</label><textarea id="psBingung" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Level Humor</label><input id="psLevHumor" type="text" placeholder="sedang"></div>
+          <div class="fg"><label>Tipe Humor</label><input id="psTipeHumor" type="text" placeholder="Ironi, sarkastik, self-deprecating"></div>
+        </div>
+      </div>
 
-    <div style="border-left:3px solid var(--red);padding-left:12px;margin:12px 0;">
-      <h4 style="font-size:13px;color:var(--red);margin-bottom:6px;">🚫 Larangan</h4>
-      <div class="fg"><label>Yang gak boleh dilakukan</label>
-        <textarea id="psLarangan" style="min-height:80px;" placeholder="- Buka dengan &quot;gue liat&quot;...&#10;- Dua konflik dalam satu output..."></textarea></div>
-    </div>
+      <div class="persec" style="border-left:3px solid var(--orange);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--orange);margin:0;">💬 CARA NGOMONG</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Kata Favorit</label><input id="psKataFav" type="text" placeholder="yaudah, gitu deh, parah sih"></div>
+          <div class="fg"><label>Kata Terlarang</label><input id="psKataLarang" type="text" placeholder="di era ini, tidak dapat dipungkiri"></div>
+          <div class="fg"><label>Sapaan Khas</label><input id="psSapaan" type="text" placeholder="bro, njir"></div>
+          <div class="fg"><label>Ekspresi Khas</label><input id="psEkspresi" type="text" placeholder=""></div>
+          <div class="fg"><label>Panjang Kalimat</label><input id="psPKalimat" type="text" placeholder="pendek"></div>
+          <div class="fg"><label>Gaya Paragraf</label><input id="psGayaPar" type="text" placeholder="pendek"></div>
+          <div class="fg"><label>Penggunaan Emoji</label><input id="psEmoji" type="text" placeholder="jarang"></div>
+          <div class="fg"><label>Emoji Favorit (max 5)</label><input id="psEmojiFav" type="text" placeholder="😅"></div>
+          <div class="fg"><label>Tanda Baca Khas</label><input id="psTandaBaca" type="text" placeholder=""></div>
+        </div>
+      </div>
 
-    <div class="fg"><label>Contoh Output (referensi pipeline)</label>
-      <textarea id="psContoh" style="min-height:50px;" placeholder="baru dua minggu pake tablet infinix..."></textarea></div>
+      <div class="persec" style="border-left:3px solid var(--red);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--red);margin:0;">🌍 SUDUT PANDANG</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Soal Harga Naik</label><textarea id="psHargaNaik" style="min-height:40px;" placeholder="Kesel tapi terima. Namanya hidup di Jakarta."></textarea></div>
+          <div class="fg"><label>Soal Hustle Culture</label><textarea id="psHustle" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Soal Produk Viral</label><textarea id="psViral" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Soal Orang Kaya</label><textarea id="psKaya" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Soal Diskon Besar</label><textarea id="psDiskon" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Soal Pinjol</label><textarea id="psPinjol" style="min-height:40px;" placeholder="Serem. Temen gue banyak yang kejebak."></textarea></div>
+          <div class="fg"><label>Soal Investasi</label><textarea id="psInvest" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Soal Politik</label><input id="psPolitik" type="text" placeholder="hindari"></div>
+          <div class="fg"><label>Soal Teknologi</label><textarea id="psTekno" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Soal Media Sosial</label><textarea id="psMedsos" style="min-height:40px;" placeholder=""></textarea></div>
+        </div>
+      </div>
+
+      <div class="persec" style="border-left:3px solid var(--blue);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--blue);margin:0;">📝 POLA KONTEN</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Cara Buka Tulisan</label><textarea id="psBuka" style="min-height:40px;" placeholder="Mulai dari fakta kecil, jangan opini."></textarea></div>
+          <div class="fg"><label>Cara Tutup Tulisan</label><textarea id="psTutup" style="min-height:40px;" placeholder="Gantung, ironi, tanpa solusi."></textarea></div>
+          <div class="fg"><label>Struktur Favorit</label><textarea id="psStruktur" style="min-height:40px;" placeholder="1 fakta → 1 momen personal → ending gantung."></textarea></div>
+          <div class="fg"><label>Topik yang Nyaman</label><input id="psTopikNyaman" type="text" placeholder="harga naik, kerja, duit, temen, kontrakan"></div>
+          <div class="fg"><label>Topik yang Dihindari</label><input id="psTopikHindar" type="text" placeholder="politik, agama, SARA"></div>
+          <div class="fg"><label>Cara Sisip Produk</label><textarea id="psSisip" style="min-height:40px;" placeholder=""></textarea></div>
+        </div>
+      </div>
+
+      <div class="persec" style="border-left:3px solid var(--green);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--green);margin:0;">✅ CONTOH BENAR (1-10)</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Contoh 1</label><textarea id="psC1" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 2</label><textarea id="psC2" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 3</label><textarea id="psC3" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 4</label><textarea id="psC4" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 5</label><textarea id="psC5" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 6</label><textarea id="psC6" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 7</label><textarea id="psC7" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 8</label><textarea id="psC8" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 9</label><textarea id="psC9" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh 10</label><textarea id="psC10" style="min-height:40px;" placeholder=""></textarea></div>
+        </div>
+      </div>
+
+      <div class="persec" style="border-left:3px solid var(--red);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--red);margin:0;">❌ CONTOH SALAH (1-5)</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Salah 1</label><textarea id="psS1" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Salah 2</label><textarea id="psS2" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Salah 3</label><textarea id="psS3" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Salah 4</label><textarea id="psS4" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Salah 5</label><textarea id="psS5" style="min-height:40px;" placeholder=""></textarea></div>
+        </div>
+      </div>
+
+      <div class="persec" style="border-left:3px solid var(--red);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--red);margin:0;">🚫 ANTI-PATTERN (1-5)</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Larangan 1</label><textarea id="psL1" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Larangan 2</label><textarea id="psL2" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Larangan 3</label><textarea id="psL3" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Larangan 4</label><textarea id="psL4" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Larangan 5</label><textarea id="psL5" style="min-height:40px;" placeholder=""></textarea></div>
+        </div>
+      </div>
+
+      <div class="persec" style="border-left:3px solid var(--purple);padding-left:10px;margin:10px 0;">
+        <div class="persec-hdr" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+          <h4 style="font-size:12px;color:var(--purple);margin:0;">🛒 AFFILIATE</h4>
+          <span style="font-size:10px;color:var(--text3);">▼</span>
+        </div>
+        <div class="persec-body" style="display:none;">
+          <div class="fg"><label>Gaya Rekomendasi</label><textarea id="psGayaRekom" style="min-height:40px;" placeholder="Seadanya, kayak ngasih tau temen, bukan sales."></textarea></div>
+          <div class="fg"><label>Cara Sebut Harga</label><textarea id="psSebutHarga" style="min-height:40px;" placeholder="Natural: harganya 50rb pas, lumayan."></textarea></div>
+          <div class="fg"><label>Cara Sebut Link</label><textarea id="psSebutLink" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh Sisip Benar</label><textarea id="psSisipBenar" style="min-height:40px;" placeholder=""></textarea></div>
+          <div class="fg"><label>Contoh Sisip Salah</label><textarea id="psSisipSalah" style="min-height:40px;" placeholder=""></textarea></div>
+        </div>
+      </div>
+
+    </div>
 
     <div id="compilePreview" style="background:var(--surface2);border-radius:8px;padding:10px;margin:8px 0;font-size:11px;color:var(--text3);display:none;"></div>
 
-    <div class="mo-row" style="flex-wrap:wrap;gap:6px;">
+    <div class="mo-row" style="flex-wrap:wrap;gap:6px;margin-top:10px;">
       <button class="btn btn-out" onclick="closeMo('moPersona')">Batal</button>
       <button class="btn btn-out" style="border-color:var(--purple);color:var(--purple);" onclick="previewCompile()">🔍 Preview</button>
-      <button class="btn btn-out" style="border-color:var(--orange);color:var(--orange);" onclick="savePersonaDraft()">💾 Simpan Draft</button>
-      <button class="btn btn-bl" onclick="saveAndActivate()">⚡ Simpan & Aktifkan</button>
+      <button class="btn btn-out" style="border-color:var(--orange);color:var(--orange);" onclick="savePersonaDraft()">💾 Draft</button>
+      <button class="btn btn-bl" onclick="saveAndActivate()">⚡ Aktifkan</button>
     </div>
   </div>
+</div>
+
+<style>
+.persec.open .persec-body { display: block !important; }
+.persec.open .persec-hdr span { transform: rotate(180deg); }
+</style>
+
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -750,9 +892,10 @@ async function loadSettings() {
     const div = document.getElementById('setPersona');
     if (active) {
       div.innerHTML = `<div style="font-size:15px;font-weight:600;margin-bottom:4px;">${active.nama} <span class="tag tag-on">v${active.version}</span> ${active.is_draft ? '<span class="tag" style="background:var(--purple-dim);color:var(--purple);">DRAFT</span>' : '<span class="tag tag-on">AKTIF</span>'}</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:6px;white-space:pre-wrap;max-height:100px;overflow:hidden;">${esc((active.system_prompt||'').slice(0,300))}...</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Identitas: ${esc(active.identitas||'-')} · Aturan: ${(active.aturan_utama||'').length}c · Larangan: ${(active.larangan||'').length}c</div>
-        ${!active.is_draft ? '' : '<button class="btn btn-bl btn-sm" style="margin-top:6px;" onclick="activateDraft('+active.id+')">🚀 Aktifkan Draft Ini</button>'}`;
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;">📍 ${active.lokasi_kota||'-'} · ${active.pekerjaan_utama||'-'} · ${active.penghasilan_range||'-'}</div>
+        <div style="font-size:11px;color:var(--text3);">💬 ${active.sifat_utama||'-'} · Humor: ${active.level_humor||'-'} (${active.tipe_humor||'-'})</div>
+        <div style="font-size:11px;color:var(--text3);">📝 SP: ${(active.system_prompt||'').length} chars · Contoh benar: ${[1,2,3,4,5,6,7,8,9,10].filter(i=>active['contoh_'+i]).length}/10</div>
+        ${!active.is_draft ? '' : '<button class="btn btn-bl btn-sm" style="margin-top:6px;" onclick="activateDraft('+active.id+')">🚀 Aktifkan</button>'}`;
       document.getElementById('persId').value = active.id;
     } else {
       div.innerHTML = '<div class="empty">Belum ada persona aktif</div>';
@@ -866,12 +1009,50 @@ async function saveProduct() {
 }
 
 // Persona
-function openPersonaModal() { 
-  // Clear form
+const PERSONA_FIELDS = [
+  // [frontendID, backendField]
+  ['psNama','nama'], ['psUmur','umur'], ['psJK','jenis_kelamin'],
+  ['psLokasi','lokasi_kota'], ['psLokasiDetail','lokasi_detail'], ['psStatus','status'],
+  ['psKerja','pekerjaan_utama'], ['psKerjaSamping','pekerjaan_sampingan'],
+  ['psGaji','penghasilan_range'], ['psDidik','pendidikan_terakhir'],
+  ['psCerita','cerita_singkat'], ['psPahit','pengalaman_pahit'], ['psLucu','pengalaman_lucu'],
+  ['psMimpi','mimpi_belum_kesampaian'], ['psKebiasaan','kebiasaan_harian'],
+  ['psHobi','hobi'], ['psTontonan','tontonan_favorit'], ['psMakanan','makanan_favorit'],
+  ['psSifat','sifat_utama'], ['psHadapi','cara_hadapi_masalah'],
+  ['psSenang','reaksi_saat_senang'], ['psKesal','reaksi_saat_kesal'],
+  ['psBingung','reaksi_saat_bingung'],
+  ['psLevHumor','level_humor'], ['psTipeHumor','tipe_humor'],
+  ['psKataFav','kata_favorit'], ['psKataLarang','kata_terlarang'],
+  ['psSapaan','sapaan_khas'], ['psEkspresi','ekspresi_khas'],
+  ['psPKalimat','panjang_kalimat'], ['psGayaPar','gaya_paragraf'],
+  ['psEmoji','penggunaan_emoji'], ['psEmojiFav','emoji_favorit'],
+  ['psTandaBaca','penggunaan_tanda_baca_khas'],
+  ['psHargaNaik','soal_harga_naik'], ['psHustle','soal_hustle_culture'],
+  ['psViral','soal_produk_viral'], ['psKaya','soal_orang_kaya'],
+  ['psDiskon','soal_diskon_besar'], ['psPinjol','soal_pinjol'],
+  ['psInvest','soal_investasi'], ['psPolitik','soal_politik'],
+  ['psTekno','soal_teknologi'], ['psMedsos','soal_media_sosial'],
+  ['psBuka','cara_buka_tulisan'], ['psTutup','cara_tutup_tulisan'],
+  ['psStruktur','struktur_favorit'], ['psTopikNyaman','topik_yang_nyaman'],
+  ['psTopikHindar','topik_yang_dihindari'], ['psSisip','cara_sisip_produk'],
+  ['psC1','contoh_1'],['psC2','contoh_2'],['psC3','contoh_3'],['psC4','contoh_4'],['psC5','contoh_5'],
+  ['psC6','contoh_6'],['psC7','contoh_7'],['psC8','contoh_8'],['psC9','contoh_9'],['psC10','contoh_10'],
+  ['psS1','salah_1'],['psS2','salah_2'],['psS3','salah_3'],['psS4','salah_4'],['psS5','salah_5'],
+  ['psL1','larangan_1'],['psL2','larangan_2'],['psL3','larangan_3'],['psL4','larangan_4'],['psL5','larangan_5'],
+  ['psGayaRekom','gaya_rekomendasi'], ['psSebutHarga','cara_sebut_harga'],
+  ['psSebutLink','cara_sebut_link'], ['psSisipBenar','contoh_sisip_produk_benar'],
+  ['psSisipSalah','contoh_sisip_produk_salah'],
+];
+
+function openPersonaModal() {
   document.getElementById('persId').value = '';
-  ['psNama','psIdentitas','psGaya','psC1','psC2','psC3','psC4','psAturan','psLarangan','psContoh'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('psNama').value = '';
+  document.getElementById('psNama2').value = '';
+  PERSONA_FIELDS.forEach(([fid,]) => { const el = document.getElementById(fid); if (el) el.value = ''; });
   document.getElementById('compilePreview').style.display = 'none';
-  openMo('moPersona'); 
+  // Collapse all sections
+  document.querySelectorAll('.persec').forEach(s => s.classList.remove('open'));
+  openMo('moPersona');
 }
 
 async function editPersonaDetail(id) {
@@ -879,33 +1060,24 @@ async function editPersonaDetail(id) {
     const p = await fetch(API + '/personas/' + id + '/detail').then(r => r.json());
     document.getElementById('persId').value = p.id;
     document.getElementById('psNama').value = p.nama || '';
-    document.getElementById('psIdentitas').value = p.identitas || '';
-    document.getElementById('psGaya').value = p.gaya_bicara || '';
-    document.getElementById('psC1').value = p.contoh_1 || '';
-    document.getElementById('psC2').value = p.contoh_2 || '';
-    document.getElementById('psC3').value = p.contoh_3 || '';
-    document.getElementById('psC4').value = p.contoh_4 || '';
-    document.getElementById('psAturan').value = p.aturan_utama || '';
-    document.getElementById('psLarangan').value = p.larangan || '';
-    document.getElementById('psContoh').value = p.contoh_output || '';
+    document.getElementById('psNama2').value = p.nama || '';
+    PERSONA_FIELDS.forEach(([fid, bfield]) => {
+      const el = document.getElementById(fid);
+      if (el) el.value = p[bfield] || '';
+    });
     document.getElementById('compilePreview').style.display = 'none';
+    document.querySelectorAll('.persec').forEach(s => s.classList.remove('open'));
     openMo('moPersona');
   } catch(e) { toast('Gagal load persona detail'); }
 }
 
 function getPersonaDetailData() {
-  return {
-    nama: document.getElementById('psNama').value,
-    identitas: document.getElementById('psIdentitas').value,
-    gaya_bicara: document.getElementById('psGaya').value,
-    contoh_1: document.getElementById('psC1').value,
-    contoh_2: document.getElementById('psC2').value,
-    contoh_3: document.getElementById('psC3').value,
-    contoh_4: document.getElementById('psC4').value,
-    aturan_utama: document.getElementById('psAturan').value,
-    larangan: document.getElementById('psLarangan').value,
-    contoh_output: document.getElementById('psContoh').value,
-  };
+  const data = { nama: document.getElementById('psNama').value || document.getElementById('psNama2').value };
+  PERSONA_FIELDS.forEach(([fid, bfield]) => {
+    const el = document.getElementById(fid);
+    if (el) data[bfield] = el.value;
+  });
+  return data;
 }
 
 async function previewCompile() {
@@ -918,8 +1090,7 @@ async function previewCompile() {
     const j = await r.json();
     const pv = document.getElementById('compilePreview');
     pv.style.display = 'block';
-    pv.innerHTML = '<b>Preview Compiled (' + j.compiled_length + ' chars):</b><br><pre style="white-space:pre-wrap;margin-top:4px;">' + esc((data.identitas+'\n'+data.gaya_bicara+'\n\n'+[data.contoh_1,data.contoh_2,data.contoh_3,data.contoh_4].filter(Boolean).join('\n\n')+'\n\n'+data.aturan_utama+'\n\n'+data.larangan).slice(0,500)) + '...</pre>';
-    // Delete the draft we just created for preview
+    pv.innerHTML = '<b>✅ Compiled ' + j.compiled_length + ' chars</b>';
     if (j.id) await fetch(API + '/personas/' + j.id, { method: 'DELETE' }).catch(()=>{});
   } catch(e) { toast('Preview gagal'); }
 }
@@ -943,32 +1114,24 @@ async function saveAndActivate() {
   const data = getPersonaDetailData();
   if (!data.nama) { toast('Nama wajib diisi'); return; }
   try {
-    // Save as draft first
     const r1 = await fetch(API + '/personas/draft', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data),
     });
     const d = await r1.json();
-    // Activate it
     const r2 = await fetch(API + '/personas/' + d.id + '/activate', { method: 'POST' });
-    const a = await r2.json();
-    toast('⚡ Persona AKTIF! Pipeline akan pakai ini di run berikutnya.');
+    toast('⚡ Persona AKTIF!');
     closeMo('moPersona');
     loadSettings();
   } catch(e) { toast('Gagal aktivasi'); }
 }
 
 async function activateDraft(id) {
-  if (!confirm('Aktifkan persona ini? Persona aktif sebelumnya akan diganti.\nPipeline akan pakai yang baru di run berikutnya.')) return;
+  if (!confirm('Aktifkan persona ini?')) return;
   try {
-    const r = await fetch(API + '/personas/' + id + '/activate', { method: 'POST' });
-    if (r.ok) {
-      toast('🚀 Persona diaktifkan!');
-      loadSettings();
-    } else {
-      const e = await r.json();
-      toast('Gagal: ' + (e.detail || r.status));
-    }
+    await fetch(API + '/personas/' + id + '/activate', { method: 'POST' });
+    toast('🚀 Persona diaktifkan!');
+    loadSettings();
   } catch(e) { toast('Gagal aktivasi'); }
 }
 
