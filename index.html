@@ -304,7 +304,8 @@ body {
   <div class="cd">
     <h3>👤 Persona Aktif</h3>
     <div id="setPersona">Memuat...</div>
-    <button class="btn btn-out btn-sm" style="margin-top:8px;" onclick="openPersonaModal()">✏️ Edit Prompt</button>
+    <div id="personaList"></div>
+    <button class="btn btn-bl btn-sm" style="margin-top:8px;" onclick="openPersonaModal()">✏️ Editor Lengkap</button>
   </div>
 
   <div class="cd">
@@ -380,17 +381,55 @@ body {
   </div>
 </div>
 
-<!-- Modal: Persona -->
+<!-- Modal: Persona Editor -->
 <div class="mo" id="moPersona">
-  <div class="mo-box">
-    <h2 id="moPersTitle">Edit Persona</h2>
+  <div class="mo-box" style="max-width:600px;max-height:85vh;overflow-y:auto;">
+    <h2>✏️ Persona Editor</h2>
     <input type="hidden" id="persId">
-    <div class="fg"><label>Nama</label><input id="psNama" placeholder="Sa'ad"></div>
-    <div class="fg"><label>System Prompt (W_SYSTEM)</label><textarea id="psPrompt" style="min-height:180px;" placeholder="Lo Sa'ad. 28 tahun..."></textarea></div>
-    <div class="fg"><label>Contoh Output</label><textarea id="psContoh" style="min-height:60px;"></textarea></div>
-    <div class="mo-row">
+    <div class="fg"><label>Nama Persona *</label><input id="psNama" placeholder="Sa'ad"></div>
+    
+    <div style="border-left:3px solid var(--blue);padding-left:12px;margin:12px 0;">
+      <h4 style="font-size:13px;color:var(--blue);margin-bottom:6px;">🧍 Identitas</h4>
+      <div class="fg"><label>Siapa dia? Nama, umur, lokasi, status</label>
+        <textarea id="psIdentitas" style="min-height:50px;" placeholder="Lo Sa'ad. 28 tahun. Kontrak di Jakpus, kerja serabutan."></textarea></div>
+    </div>
+
+    <div style="border-left:3px solid var(--purple);padding-left:12px;margin:12px 0;">
+      <h4 style="font-size:13px;color:var(--purple);margin-bottom:6px;">💬 Gaya Bicara</h4>
+      <div class="fg"><label>Cara dia nulis — nada, tone, gaya khas</label>
+        <textarea id="psGaya" style="min-height:60px;" placeholder="Lo nulis kayak orang yang lagi ngetik di HP sambil rebahan habis capek kerja..."></textarea></div>
+    </div>
+
+    <div style="border-left:3px solid var(--orange);padding-left:12px;margin:12px 0;">
+      <h4 style="font-size:13px;color:var(--orange);margin-bottom:4px;">📝 Contoh Nyata (4 contoh)</h4>
+      <div class="fg"><label>Contoh 1</label><textarea id="psC1" style="min-height:60px;" placeholder='"parah sih sebenernya. udah kerja 2 tahun..."'></textarea></div>
+      <div class="fg"><label>Contoh 2</label><textarea id="psC2" style="min-height:60px;" placeholder='"temen gue resign kemarin..."'></textarea></div>
+      <div class="fg"><label>Contoh 3</label><textarea id="psC3" style="min-height:60px;" placeholder='"harga beras naik lagi..."'></textarea></div>
+      <div class="fg"><label>Contoh 4</label><textarea id="psC4" style="min-height:60px;" placeholder='"udah ngitung-ngitung KPR..."'></textarea></div>
+    </div>
+
+    <div style="border-left:3px solid var(--green);padding-left:12px;margin:12px 0;">
+      <h4 style="font-size:13px;color:var(--green);margin-bottom:6px;">📋 Aturan Utama</h4>
+      <div class="fg"><label>Cara kerja — step by step gimana dia nulis</label>
+        <textarea id="psAturan" style="min-height:100px;" placeholder="1. Ambil SATU fakta...&#10;2. Hubungkan ke momen...&#10;..."></textarea></div>
+    </div>
+
+    <div style="border-left:3px solid var(--red);padding-left:12px;margin:12px 0;">
+      <h4 style="font-size:13px;color:var(--red);margin-bottom:6px;">🚫 Larangan</h4>
+      <div class="fg"><label>Yang gak boleh dilakukan</label>
+        <textarea id="psLarangan" style="min-height:80px;" placeholder="- Buka dengan &quot;gue liat&quot;...&#10;- Dua konflik dalam satu output..."></textarea></div>
+    </div>
+
+    <div class="fg"><label>Contoh Output (referensi pipeline)</label>
+      <textarea id="psContoh" style="min-height:50px;" placeholder="baru dua minggu pake tablet infinix..."></textarea></div>
+
+    <div id="compilePreview" style="background:var(--surface2);border-radius:8px;padding:10px;margin:8px 0;font-size:11px;color:var(--text3);display:none;"></div>
+
+    <div class="mo-row" style="flex-wrap:wrap;gap:6px;">
       <button class="btn btn-out" onclick="closeMo('moPersona')">Batal</button>
-      <button class="btn btn-bl" onclick="savePersona()">Simpan</button>
+      <button class="btn btn-out" style="border-color:var(--purple);color:var(--purple);" onclick="previewCompile()">🔍 Preview</button>
+      <button class="btn btn-out" style="border-color:var(--orange);color:var(--orange);" onclick="savePersonaDraft()">💾 Simpan Draft</button>
+      <button class="btn btn-bl" onclick="saveAndActivate()">⚡ Simpan & Aktifkan</button>
     </div>
   </div>
 </div>
@@ -398,7 +437,7 @@ body {
 <div class="toast" id="toast"></div>
 
 <script>
-const API = "https://scoring-conduct-lows-spectrum.trycloudflare.com/api";
+const API = '/api';
 
 // === NAV ===
 document.querySelectorAll('.bnav button').forEach(b => {
@@ -710,14 +749,33 @@ async function loadSettings() {
     const active = personas.find(p => p.is_active);
     const div = document.getElementById('setPersona');
     if (active) {
-      div.innerHTML = `<div style="font-size:15px;font-weight:600;margin-bottom:4px;">${active.nama} <span class="tag tag-on">v${active.version}</span></div>
-        <div style="font-size:12px;color:var(--text2);margin-top:6px;white-space:pre-wrap;max-height:100px;overflow:hidden;">${esc((active.system_prompt||'').slice(0,300))}...</div>`;
+      div.innerHTML = `<div style="font-size:15px;font-weight:600;margin-bottom:4px;">${active.nama} <span class="tag tag-on">v${active.version}</span> ${active.is_draft ? '<span class="tag" style="background:var(--purple-dim);color:var(--purple);">DRAFT</span>' : '<span class="tag tag-on">AKTIF</span>'}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px;white-space:pre-wrap;max-height:100px;overflow:hidden;">${esc((active.system_prompt||'').slice(0,300))}...</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Identitas: ${esc(active.identitas||'-')} · Aturan: ${(active.aturan_utama||'').length}c · Larangan: ${(active.larangan||'').length}c</div>
+        ${!active.is_draft ? '' : '<button class="btn btn-bl btn-sm" style="margin-top:6px;" onclick="activateDraft('+active.id+')">🚀 Aktifkan Draft Ini</button>'}`;
       document.getElementById('persId').value = active.id;
-      document.getElementById('psNama').value = active.nama;
-      document.getElementById('psPrompt').value = active.system_prompt || '';
-      document.getElementById('psContoh').value = active.contoh_output || '';
     } else {
       div.innerHTML = '<div class="empty">Belum ada persona aktif</div>';
+    }
+  } catch(e) {}
+  
+  // List all personas (drafts + active)
+  try {
+    const all = await fetch(API + '/personas').then(r => r.json());
+    const listDiv = document.getElementById('personaList');
+    if (all.length > 1) {
+      listDiv.innerHTML = '<div style="font-size:12px;color:var(--text3);margin-top:8px;">Draft/History:</div>' + 
+        all.filter(p => !p.is_active).map(p => `
+          <div class="li" style="padding:8px 0;">
+            <div><div class="nm">${p.nama} <span class="tag" style="background:var(--purple-dim);color:var(--purple);">DRAFT</span> v${p.version}</div>
+            <div class="sb">${(p.system_prompt||'').slice(0,80)}...</div></div>
+            <div style="display:flex;gap:4px;">
+              <button class="btn btn-out btn-sm" onclick="editPersonaDetail(${p.id})">✏️</button>
+              <button class="btn btn-out btn-sm" style="border-color:var(--green);color:var(--green);" onclick="activateDraft(${p.id})">🚀</button>
+            </div>
+          </div>`).join('');
+    } else {
+      listDiv.innerHTML = '';
     }
   } catch(e) {}
 
@@ -808,25 +866,110 @@ async function saveProduct() {
 }
 
 // Persona
-function openPersonaModal() { openMo('moPersona'); }
+function openPersonaModal() { 
+  // Clear form
+  document.getElementById('persId').value = '';
+  ['psNama','psIdentitas','psGaya','psC1','psC2','psC3','psC4','psAturan','psLarangan','psContoh'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('compilePreview').style.display = 'none';
+  openMo('moPersona'); 
+}
 
-async function savePersona() {
-  const data = {
-    nama: document.getElementById('psNama').value,
-    system_prompt: document.getElementById('psPrompt').value,
-    contoh_output: document.getElementById('psContoh').value,
-    is_active: true,
-  };
-  if (!data.nama || !data.system_prompt) { toast('Nama & prompt wajib'); return; }
-  const id = document.getElementById('persId').value;
+async function editPersonaDetail(id) {
   try {
-    if (id) {
-      await fetch(API + '/personas/' + id, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-    }
-    toast('Persona diupdate!');
+    const p = await fetch(API + '/personas/' + id + '/detail').then(r => r.json());
+    document.getElementById('persId').value = p.id;
+    document.getElementById('psNama').value = p.nama || '';
+    document.getElementById('psIdentitas').value = p.identitas || '';
+    document.getElementById('psGaya').value = p.gaya_bicara || '';
+    document.getElementById('psC1').value = p.contoh_1 || '';
+    document.getElementById('psC2').value = p.contoh_2 || '';
+    document.getElementById('psC3').value = p.contoh_3 || '';
+    document.getElementById('psC4').value = p.contoh_4 || '';
+    document.getElementById('psAturan').value = p.aturan_utama || '';
+    document.getElementById('psLarangan').value = p.larangan || '';
+    document.getElementById('psContoh').value = p.contoh_output || '';
+    document.getElementById('compilePreview').style.display = 'none';
+    openMo('moPersona');
+  } catch(e) { toast('Gagal load persona detail'); }
+}
+
+function getPersonaDetailData() {
+  return {
+    nama: document.getElementById('psNama').value,
+    identitas: document.getElementById('psIdentitas').value,
+    gaya_bicara: document.getElementById('psGaya').value,
+    contoh_1: document.getElementById('psC1').value,
+    contoh_2: document.getElementById('psC2').value,
+    contoh_3: document.getElementById('psC3').value,
+    contoh_4: document.getElementById('psC4').value,
+    aturan_utama: document.getElementById('psAturan').value,
+    larangan: document.getElementById('psLarangan').value,
+    contoh_output: document.getElementById('psContoh').value,
+  };
+}
+
+async function previewCompile() {
+  const data = getPersonaDetailData();
+  try {
+    const r = await fetch(API + '/personas/draft', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const j = await r.json();
+    const pv = document.getElementById('compilePreview');
+    pv.style.display = 'block';
+    pv.innerHTML = '<b>Preview Compiled (' + j.compiled_length + ' chars):</b><br><pre style="white-space:pre-wrap;margin-top:4px;">' + esc((data.identitas+'\n'+data.gaya_bicara+'\n\n'+[data.contoh_1,data.contoh_2,data.contoh_3,data.contoh_4].filter(Boolean).join('\n\n')+'\n\n'+data.aturan_utama+'\n\n'+data.larangan).slice(0,500)) + '...</pre>';
+    // Delete the draft we just created for preview
+    if (j.id) await fetch(API + '/personas/' + j.id, { method: 'DELETE' }).catch(()=>{});
+  } catch(e) { toast('Preview gagal'); }
+}
+
+async function savePersonaDraft() {
+  const data = getPersonaDetailData();
+  if (!data.nama) { toast('Nama wajib diisi'); return; }
+  try {
+    const r = await fetch(API + '/personas/draft', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const j = await r.json();
+    toast('✅ Draft disimpan! (' + j.compiled_length + ' chars)');
     closeMo('moPersona');
     loadSettings();
-  } catch(e) { toast('Gagal simpan'); }
+  } catch(e) { toast('Gagal simpan draft'); }
+}
+
+async function saveAndActivate() {
+  const data = getPersonaDetailData();
+  if (!data.nama) { toast('Nama wajib diisi'); return; }
+  try {
+    // Save as draft first
+    const r1 = await fetch(API + '/personas/draft', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const d = await r1.json();
+    // Activate it
+    const r2 = await fetch(API + '/personas/' + d.id + '/activate', { method: 'POST' });
+    const a = await r2.json();
+    toast('⚡ Persona AKTIF! Pipeline akan pakai ini di run berikutnya.');
+    closeMo('moPersona');
+    loadSettings();
+  } catch(e) { toast('Gagal aktivasi'); }
+}
+
+async function activateDraft(id) {
+  if (!confirm('Aktifkan persona ini? Persona aktif sebelumnya akan diganti.\nPipeline akan pakai yang baru di run berikutnya.')) return;
+  try {
+    const r = await fetch(API + '/personas/' + id + '/activate', { method: 'POST' });
+    if (r.ok) {
+      toast('🚀 Persona diaktifkan!');
+      loadSettings();
+    } else {
+      const e = await r.json();
+      toast('Gagal: ' + (e.detail || r.status));
+    }
+  } catch(e) { toast('Gagal aktivasi'); }
 }
 
 // === UTILS ===
