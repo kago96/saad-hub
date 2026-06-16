@@ -332,11 +332,26 @@ body {
   </div>
 </div>
 
+<!-- PAGE: Performa -->
+<div class="pg" id="pg-performa">
+  <div class="cd">
+    <h3>📊 Performa Post</h3>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="btn btn-bl btn-sm" onclick="loadPerforma()">🔄 Refresh</button>
+      <button class="btn btn-gr btn-sm" onclick="refreshInsights()">📡 Tarik Metrik</button>
+    </div>
+    <div id="performaList">
+      <div class="li"><div class="nm">Memuat data performa...</div></div>
+    </div>
+  </div>
+</div>
+
 <!-- Bottom Nav -->
 <div class="bnav">
   <button class="on" data-pg="home"><span class="ico">🏠</span>Home</button>
   <button data-pg="content"><span class="ico">⚡</span>Konten</button>
   <button data-pg="social"><span class="ico">📱</span>Social</button>
+  <button data-pg="performa"><span class="ico">📊</span>Performa</button>
   <button data-pg="settings"><span class="ico">⚙️</span>Setelan</button>
 </div>
 
@@ -1138,6 +1153,49 @@ async function activateDraft(id) {
 // === UTILS ===
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function attr(s) { return esc(s).replace(/"/g, '&quot;').replace(/\n/g, '&#10;'); }
+
+
+// === PERFORMA ===
+async function loadPerforma() {
+  const div = document.getElementById('performaList');
+  try {
+    const data = await fetch(API + '/performa').then(r => r.json());
+    if (!data.length) {
+      div.innerHTML = '<div class="empty">Belum ada post ke Threads</div>';
+      return;
+    }
+    div.innerHTML = data.map(p => {
+      const likes = p.likes ? `<span style="color:var(--red);">❤️ ${p.likes}</span>` : '';
+      const replies = p.replies ? `<span style="color:var(--blue);">💬 ${p.replies}</span>` : '';
+      const views = p.views ? `<span style="color:var(--text2);">👁 ${p.views}</span>` : '';
+      const metrics = [likes, replies, views].filter(Boolean).join(' · ') || '⏳ menunggu data';
+      const postLink = p.threads_post_id 
+        ? `<a href="https://threads.net/@masaffil/post/${p.threads_post_id}" target="_blank" style="color:var(--blue);font-size:11px;">🔗 ${p.threads_post_id.slice(-6)}</a>`
+        : '';
+      const time = new Date(p.created_at).toLocaleString('id-ID', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+      return `<div class="li" style="flex-direction:column;align-items:stretch;gap:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><span class="tag" style="background:var(--blue-dim);color:var(--blue);font-size:10px;">${p.kategori||''}</span> <span style="font-size:12px;">${time}</span></div>
+          ${postLink}
+        </div>
+        <div style="font-size:13px;line-height:1.4;margin:4px 0;">${esc(p.output||'').replace(/\n/g,'<br>')}</div>
+        <div style="font-size:11px;color:var(--text3);">${metrics}</div>
+      </div>`;
+    }).join('');
+  } catch(e) { div.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function refreshInsights() {
+  const btn = event.target;
+  btn.disabled = true; btn.textContent = '⏳ Menarik...';
+  try {
+    const r = await fetch(API + '/performa/refresh', { method: 'POST' }).then(r => r.json());
+    btn.textContent = `✅ ${r.refreshed} post di-refresh`;
+    setTimeout(() => { btn.textContent = '📡 Tarik Metrik'; btn.disabled = false; loadPerforma(); }, 1500);
+  } catch(e) {
+    btn.textContent = '❌ Gagal'; btn.disabled = false;
+  }
+}
 
 // Init
 loadHome();
