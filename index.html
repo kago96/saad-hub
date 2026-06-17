@@ -351,12 +351,27 @@ body {
   </div>
 </div>
 
+<!-- PAGE: Audience -->
+<div class="pg" id="pg-audience">
+  <div class="cd">
+    <h3>👥 Audience Growth</h3>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="btn btn-bl btn-sm" onclick="loadAudience()">🔄 Refresh</button>
+      <button class="btn btn-gr btn-sm" onclick="loadGrowth()">📈 Growth</button>
+    </div>
+    <div id="audienceContent">
+      <div class="li"><div class="nm">Memuat data audiens...</div></div>
+    </div>
+  </div>
+</div>
+
 <!-- Bottom Nav -->
 <div class="bnav">
   <button class="on" data-pg="home"><span class="ico">🏠</span>Home</button>
   <button data-pg="content"><span class="ico">⚡</span>Konten</button>
   <button data-pg="social"><span class="ico">📱</span>Social</button>
   <button data-pg="performa"><span class="ico">📊</span>Performa</button>
+  <button data-pg="audience"><span class="ico">👥</span>Audience</button>
   <button data-pg="settings"><span class="ico">⚙️</span>Setelan</button>
 </div>
 
@@ -1215,6 +1230,73 @@ async function loadScheduleRec() {
     el.innerHTML = html;
   } catch(e) {
     el.innerHTML = '<div class="li" style="color:#f44">❌ Gagal analisis: ' + e.message + '</div>';
+  }
+}
+
+async function loadAudience() {
+  const el = document.getElementById('audienceContent');
+  el.innerHTML = '<div class="li"><div class="nm">Loading audience data...</div></div>';
+  try {
+    const r = await fetch(API_URL + '/api/audience/segments');
+    const d = await r.json();
+    let html = '<div style="font-size:13px;color:#aaa;margin-bottom:8px">👤 ' + (d.stats.total_users || 0) + ' engagers tracked</div>';
+    
+    if (d.top_engagers && d.top_engagers.length) {
+      html += '<h4 style="margin:8px 0 4px">🔥 Top Engagers</h4>';
+      d.top_engagers.slice(0,10).forEach(u => {
+        html += '<div class="li"><div class="nm">@' + esc(u.username) + '</div><div class="vl">' + u.engagement_score + ' pts | ' + (u.fav_kategori||'?') + '</div></div>';
+      });
+    }
+    
+    if (d.by_category && d.by_category.length) {
+      html += '<h4 style="margin:12px 0 4px">📂 By Category</h4>';
+      d.by_category.forEach(c => {
+        html += '<div class="li"><div class="nm">' + c.fav_kategori + '</div><div class="vl">' + c.fans + ' fans</div></div>';
+      });
+    }
+    
+    if (d.recent && d.recent.length) {
+      html += '<h4 style="margin:12px 0 4px">🕐 Recent</h4>';
+      d.recent.slice(0,10).forEach(r => {
+        html += '<div class="li" style="font-size:11px"><span>' + r.action + '</span> by <b>@' + esc(r.username) + '</b> <span style="color:#666">' + (r.created_at||'').substr(0,16) + '</span></div>';
+      });
+    }
+    
+    if (!d.top_engagers.length && !d.recent.length) {
+      html += '<div class="li" style="color:#888">Belum ada data engagement. Nanti muncul setelah ada likes/replies.</div>';
+    }
+    el.innerHTML = html;
+  } catch(e) {
+    el.innerHTML = '<div class="li" style="color:#f44">❌ Gagal: ' + e.message + '</div>';
+  }
+}
+
+async function loadGrowth() {
+  const el = document.getElementById('audienceContent');
+  el.innerHTML = '<div class="li"><div class="nm">Fetching growth data...</div></div>';
+  try {
+    const r = await fetch(API_URL + '/api/growth/track');
+    const d = await r.json();
+    let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
+    html += '<div class="li"><div class="nm">Followers</div><div class="vl" style="font-size:24px">' + (d.follower_count || '?') + '</div></div>';
+    html += '<div class="li"><div class="nm">Growth/Day</div><div class="vl" style="font-size:24px;color:#0f0">+' + d.growth_rate_per_day + '</div></div>';
+    html += '<div class="li"><div class="nm">Growth %</div><div class="vl">' + d.growth_pct + '%</div></div>';
+    html += '<div class="li"><div class="nm">Virality</div><div class="vl" style="color:#ff0">' + d.virality_score + '%</div></div>';
+    html += '</div>';
+    
+    if (d.total_views) html += '<div style="color:#aaa;font-size:12px">👁 ' + d.total_views + ' views | ❤ ' + d.total_likes + ' likes</div>';
+    
+    if (d.history && d.history.length > 1) {
+      html += '<h4 style="margin:12px 0 4px">📈 History</h4>';
+      d.history.slice(-8).forEach(h => {
+        html += '<div class="li"><div class="nm">' + (h.recorded_at||'').substr(0,10) + '</div><div class="vl">' + h.count + '</div></div>';
+      });
+    } else {
+      html += '<div class="li" style="color:#888;margin-top:8px">📡 Data follower belum tersedia. Butuh Threads API token untuk fetch.</div>';
+    }
+    el.innerHTML = html;
+  } catch(e) {
+    el.innerHTML = '<div class="li" style="color:#f44">❌ Gagal: ' + e.message + '</div>';
   }
 }
 
