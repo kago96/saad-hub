@@ -1221,7 +1221,7 @@ async function loadScheduleRec() {
   const el = document.getElementById('scheduleRec');
   el.innerHTML = '<div class="li"><div class="nm">Menganalisis data performa...</div></div>';
   try {
-    const r = await fetch(API_URL + '/api/performance/analysis');
+    const r = await fetch(API + '/performance/analysis');
     const data = await r.json();
     let html = '<div class="li" style="white-space:pre-line;font-size:13px;color:#bbb">' + data.recommendation + '</div>';
     if (data.ready && data.best_hours.length) {
@@ -1237,7 +1237,7 @@ async function loadAudience() {
   const el = document.getElementById('audienceContent');
   el.innerHTML = '<div class="li"><div class="nm">Loading audience data...</div></div>';
   try {
-    const r = await fetch(API_URL + '/api/audience/segments');
+    const r = await fetch(API + '/audience/segments');
     const d = await r.json();
     let html = '<div style="font-size:13px;color:#aaa;margin-bottom:8px">👤 ' + (d.stats.total_users || 0) + ' engagers tracked</div>';
     
@@ -1275,7 +1275,7 @@ async function loadGrowth() {
   const el = document.getElementById('audienceContent');
   el.innerHTML = '<div class="li"><div class="nm">Fetching growth data...</div></div>';
   try {
-    const r = await fetch(API_URL + '/api/growth/track');
+    const r = await fetch(API + '/growth/track');
     const d = await r.json();
     let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
     html += '<div class="li"><div class="nm">Followers</div><div class="vl" style="font-size:24px">' + (d.follower_count || '?') + '</div></div>';
