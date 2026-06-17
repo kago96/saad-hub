@@ -351,6 +351,19 @@ body {
   </div>
 </div>
 
+<!-- PAGE: A/B Test -->
+<div class="pg" id="pg-abtest">
+  <div class="cd">
+    <h3>🧪 A/B Testing</h3>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="btn btn-bl btn-sm" onclick="loadABTests()">🔄 Refresh</button>
+    </div>
+    <div id="abContent">
+      <div class="li"><div class="nm">Memuat data A/B...</div></div>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE: Kalender -->
 <div class="pg" id="pg-calendar">
   <div class="cd">
@@ -385,6 +398,7 @@ body {
   <button data-pg="content"><span class="ico">⚡</span>Konten</button>
   <button data-pg="social"><span class="ico">📱</span>Social</button>
   <button data-pg="performa"><span class="ico">📊</span>Performa</button>
+  <button data-pg="abtest"><span class="ico">🧪</span>A/B</button>
   <button data-pg="calendar"><span class="ico">📅</span>Kalender</button>
   <button data-pg="audience"><span class="ico">👥</span>Audience</button>
   <button data-pg="settings"><span class="ico">⚙️</span>Setelan</button>
@@ -1246,6 +1260,58 @@ async function loadScheduleRec() {
   } catch(e) {
     el.innerHTML = '<div class="li" style="color:#f44">❌ Gagal analisis: ' + e.message + '</div>';
   }
+}
+
+async function loadABTests() {
+  const el = document.getElementById('abContent');
+  el.innerHTML = '<div class="li"><div class="nm">Loading...</div></div>';
+  try {
+    const r = await fetch(API + '/ab/history');
+    const d = await r.json();
+    
+    let html = '';
+    
+    // Patterns section
+    if (d.patterns && d.patterns.length > 0) {
+      html += '<div style="margin-bottom:16px;font-size:13px;color:#a855f7">🧠 Learned Patterns</div>';
+      for (const p of d.patterns.slice(0, 6)) {
+        html += '<div class="li" style="font-size:12px">';
+        html += '<span style="color:#a855f7">' + p.pattern_type + '</span>: ' + p.pattern_value;
+        html += ' <span style="color:#666">(' + p.win_count + '/' + p.total_tests + ' wins, weight ' + p.weight.toFixed(1) + ')</span>';
+        html += '</div>';
+      }
+      html += '<div style="height:12px"></div>';
+    }
+    
+    // Batches
+    html += '<div style="font-size:13px;color:#3b82f6;margin-bottom:8px">📋 Recent Batches</div>';
+    for (const b of d.batches || []) {
+      html += '<div class="li" style="margin-bottom:8px">';
+      html += '<div style="font-size:11px;color:#666">#' + b.batch_id.slice(3,11) + '</div>';
+      html += '<div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">';
+      const batchTests = (d.tests || []).filter(t => t.batch_id === b.batch_id);
+      for (const t of batchTests) {
+        const bg = t.is_winner ? '#22c55e20' : '#1c1c1c';
+        const border = t.is_winner ? '2px solid #22c55e' : '1px solid #333';
+        const crown = t.is_winner ? ' 👑' : '';
+        html += '<div style="flex:1;min-width:100px;background:'+bg+';border:'+border+';border-radius:8px;padding:6px 8px;font-size:11px">';
+        html += '<b>' + t.variant_label + crown + '</b> ';
+        html += '<span style="color:#888">' + (t.hook_type||'?') + '</span>';
+        if (t.engagement_score) {
+          html += '<div style="color:#f59e0b">⭐ ' + t.engagement_score + '</div>';
+        }
+        html += '<div style="color:#aaa;font-size:10px;margin-top:2px;overflow:hidden;max-height:36px">' + (t.content||'').substring(0,80) + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+    }
+    
+    if (!d.batches || d.batches.length === 0) {
+      html += '<div class="li" style="color:#666">Belum ada A/B test. Pipeline akan generate otomatis.</div>';
+    }
+    
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = '<div class="li" style="color:#ef4444">Gagal: ' + e.message + '</div>'; }
 }
 
 async function loadCalendar() {
