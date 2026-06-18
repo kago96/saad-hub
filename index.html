@@ -252,6 +252,30 @@ body {
   </div>
 </div>
 
+<!-- PAGE: Outbound Seed -->
+<div class="pg" id="pg-outbound">
+  <div class="cd">
+    <h3>🚀 Outbound Seeding</h3>
+    <div style="font-size:12px;color:#888;margin-bottom:12px">
+      Paste Threads URL → AI generate hot take → auto reply
+    </div>
+    <div class="fg">
+      <label>Threads Post URL</label>
+      <input id="seedUrl" placeholder="https://threads.net/..." style="background:#1c1c1c;border:1px solid #333;color:#fff;padding:10px;border-radius:8px;width:100%;font-size:14px">
+    </div>
+    <div style="display:flex;gap:8px;margin:12px 0">
+      <button class="btn btn-bl" onclick="previewSeed()" style="flex:1">🔍 Preview</button>
+      <button class="btn btn-gr" onclick="postSeed()" style="flex:1">🚀 Post Reply</button>
+    </div>
+    <div id="seedResult" style="margin-top:8px;font-size:13px;color:#aaa"></div>
+    <div style="margin-top:16px;border-top:1px solid #262626;padding-top:12px">
+      <div style="font-size:12px;color:#666;margin-bottom:8px">📋 Batch dari trending</div>
+      <button class="btn btn-sm" onclick="getTrendingThreads()" style="background:#333;color:#aaa">Cari Post Viral</button>
+      <div id="trendingResults" style="margin-top:8px;font-size:12px"></div>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE: Social -->
 <div class="pg" id="pg-social">
   <div class="cd">
@@ -396,6 +420,7 @@ body {
 <div class="bnav">
   <button class="on" data-pg="home"><span class="ico">🏠</span>Home</button>
   <button data-pg="content"><span class="ico">⚡</span>Konten</button>
+  <button data-pg="outbound"><span class="ico">🚀</span>Outbound</button>
   <button data-pg="social"><span class="ico">📱</span>Social</button>
   <button data-pg="performa"><span class="ico">📊</span>Performa</button>
   <button data-pg="abtest"><span class="ico">🧪</span>A/B</button>
@@ -1312,6 +1337,57 @@ async function loadABTests() {
     
     el.innerHTML = html;
   } catch(e) { el.innerHTML = '<div class="li" style="color:#ef4444">Gagal: ' + e.message + '</div>'; }
+}
+
+async function previewSeed() {
+  const url = document.getElementById('seedUrl').value.trim();
+  if (!url) return;
+  const el = document.getElementById('seedResult');
+  el.innerHTML = '<span style="color:#888">Generating preview...</span>';
+  try {
+    const r = await fetch(API + '/seed/preview?url=' + encodeURIComponent(url));
+    const d = await r.json();
+    if (d.error) { el.innerHTML = '<span style="color:#ef4444">' + d.error + '</span>'; return; }
+    el.innerHTML = '<div style="background:#1c1c1c;padding:10px;border-radius:8px;margin-top:8px">' +
+      '<div style="color:#666;font-size:11px;margin-bottom:4px">@' + (d.author||'?') + ': ' + (d.thread_text||'').substring(0,80) + '</div>' +
+      '<div style="color:#f59e0b;font-size:11px">[' + d.strategy + ']</div>' +
+      '<div style="color:#fff;margin-top:4px;font-style:italic">' + d.comment + '</div>' +
+      '</div>';
+  } catch(e) { el.innerHTML = '<span style="color:#ef4444">Error: ' + e.message + '</span>'; }
+}
+
+async function postSeed() {
+  const url = document.getElementById('seedUrl').value.trim();
+  if (!url) return;
+  const el = document.getElementById('seedResult');
+  el.innerHTML = '<span style="color:#f59e0b">Posting...</span>';
+  try {
+    const r = await fetch(API + '/seed/post?url=' + encodeURIComponent(url), { method: 'POST' });
+    const d = await r.json();
+    if (d.error) { el.innerHTML = '<span style="color:#ef4444">' + d.error + '</span>'; return; }
+    el.innerHTML = '<span style="color:#22c55e">✅ Posted! reply_id: ' + d.reply_id + '</span>';
+    document.getElementById('seedUrl').value = '';
+  } catch(e) { el.innerHTML = '<span style="color:#ef4444">Error: ' + e.message + '</span>'; }
+}
+
+async function getTrendingThreads() {
+  const el = document.getElementById('trendingResults');
+  el.innerHTML = '<span style="color:#888">Searching...</span>';
+  try {
+    const r = await fetch(API + '/seed/trending');
+    const d = await r.json();
+    if (!d.posts || d.posts.length === 0) {
+      el.innerHTML = '<span style="color:#666">No trending posts found. Try manual search di Threads app → share URL ke sini.</span>';
+      return;
+    }
+    let html = '';
+    for (const p of d.posts.slice(0, 5)) {
+      html += '<div class="li" style="cursor:pointer" onclick="document.getElementById(\'seedUrl\').value=\'' + p.url + '\';previewSeed()">' +
+        '<div style="font-size:12px;color:#ccc">' + (p.snippet||p.id).substring(0,100) + '</div>' +
+        '<div style="font-size:10px;color:#3b82f6;margin-top:2px">' + p.url + '</div></div>';
+    }
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = '<span style="color:#ef4444">Error: ' + e.message + '</span>'; }
 }
 
 async function loadCalendar() {
